@@ -83,7 +83,16 @@ class WorkshopCustomWidgets {
               ? Text("CLICK TO EDIT", style: TextStyle(color: Colors.green))
               : SizedBox(height: 1),
           Container(height: 4.0),
-          Text(w.title, style: Style.titleTextStyle),
+          Row(
+            children: [
+              Text(w.title, style: Style.titleTextStyle),
+              Container(
+                  decoration: BoxDecoration.lerp(
+                      BoxDecoration(shape: BoxShape.rectangle),
+                      BoxDecoration(shape: BoxShape.triangle),
+                      1))
+            ],
+          ),
           Container(height: 10.0),
           Text('${isClub ? w.club.name : w.entity.name}',
               style: Style.commonTextStyle),

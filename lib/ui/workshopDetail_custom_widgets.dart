@@ -14,6 +14,7 @@ import 'package:iit_app/ui/workshop_custom_widgets.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:skeleton_text/skeleton_text.dart';
+import 'package:share/share.dart';
 
 class WorkshopDetailCustomWidgets {
   final BuiltWorkshopDetailPost workshopDetail;
@@ -631,6 +632,7 @@ class WorkshopDetailCustomWidgets {
           title,
           style: headingStyle,
         ),
+        
       ],
     );
   }
@@ -654,9 +656,33 @@ class WorkshopDetailCustomWidgets {
   }
 
   Container getToolbar(BuildContext context) {
+    String imageUrl = workshopDetail?.image_url;
+    var _image;
+    if (imageUrl?.isEmpty == true) imageUrl = null;
+
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-      child: BackButton(color: Colors.lightGreen),
+      child: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            child: BackButton(color: Colors.lightGreen),
+          ),
+          IconButton(
+            icon: Icon(Icons.share),
+            color: ColorConstants.textColor,
+            onPressed: () {
+              if (imageUrl != null && imageUrl != '') {
+                _image = Image.network(imageUrl);
+                Share.shareFiles(['$_image'],
+                    text:
+                        'Checkout this amazing workshop ${workshopDetail.title} to be held on ${workshopDetail.date} at ${workshopDetail.time}');
+              }
+              Share.share(
+                  'Checkout this amazing workshop ${workshopDetail.title} to be held on ${workshopDetail.date} at ${workshopDetail.time}');
+            },
+          )
+        ],
+      ),
     );
   }
 
