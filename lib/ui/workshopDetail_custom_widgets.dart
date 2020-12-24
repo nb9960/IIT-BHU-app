@@ -15,6 +15,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:share/share.dart';
+import 'package:clippy_flutter/clippy_flutter.dart';
 
 class WorkshopDetailCustomWidgets {
   final BuiltWorkshopDetailPost workshopDetail;
@@ -332,7 +333,25 @@ class WorkshopDetailCustomWidgets {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(_overviewTitle, style: Style.headerTextStyle),
+                Row(
+                  children: [
+                    Text(_overviewTitle, style: Style.headerTextStyle),
+                    SizedBox(width: 18.0),
+                    Label(
+                      triangleHeight: 10.0,
+                      edge: Edge.RIGHT,
+                      child: Container(
+                        padding: const EdgeInsets.only(
+                            left: 8.0, right: 18.0, top: 8.0, bottom: 8.0),
+                        color: ColorConstants.workshopCardContainer,
+                        child: Text(
+                          workshopSummary.is_workshop ? 'Workshop' : 'Event',
+                          style: Style.titleTextStyle,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 Separator(),
                 workshopDetail == null
                     ? _loadingAnimation()
@@ -621,20 +640,17 @@ class WorkshopDetailCustomWidgets {
         fontFamily: 'Poppins',
         fontWeight: FontWeight.w300,
         color: color);
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: color,
-        ),
-        SizedBox(width: 5.0),
-        Text(
-          title,
-          style: headingStyle,
-        ),
-        
-      ],
-    );
+    return Row(children: [
+      Icon(
+        icon,
+        color: color,
+      ),
+      SizedBox(width: 5.0),
+      Text(
+        title,
+        style: headingStyle,
+      ),
+    ]);
   }
 
   Container getGradient() {
