@@ -672,33 +672,9 @@ class WorkshopDetailCustomWidgets {
   }
 
   Container getToolbar(BuildContext context) {
-    String imageUrl = workshopDetail?.image_url;
-    var _image;
-    if (imageUrl?.isEmpty == true) imageUrl = null;
-
     return Container(
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-            child: BackButton(color: Colors.lightGreen),
-          ),
-          IconButton(
-            icon: Icon(Icons.share),
-            color: ColorConstants.textColor,
-            onPressed: () {
-              if (imageUrl != null && imageUrl != '') {
-                _image = Image.network(imageUrl);
-                Share.shareFiles(['$_image'],
-                    text:
-                        'Checkout this amazing workshop ${workshopDetail.title} to be held on ${workshopDetail.date} at ${workshopDetail.time}');
-              }
-              Share.share(
-                  'Checkout this amazing workshop ${workshopDetail.title} to be held on ${workshopDetail.date} at ${workshopDetail.time}');
-            },
-          )
-        ],
-      ),
+      margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+      child: BackButton(color: Colors.lightGreen),
     );
   }
 
