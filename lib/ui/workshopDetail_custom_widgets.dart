@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:iit_app/model/appConstants.dart';
 import 'package:iit_app/model/built_post.dart';
@@ -14,8 +16,9 @@ import 'package:iit_app/ui/workshop_custom_widgets.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:skeleton_text/skeleton_text.dart';
-import 'package:share/share.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:clippy_flutter/clippy_flutter.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 class WorkshopDetailCustomWidgets {
   final BuiltWorkshopDetailPost workshopDetail;
@@ -306,6 +309,35 @@ class WorkshopDetailCustomWidgets {
         ? editWorkshopOptions()
         : Container();
     final _overviewTitle = "Description".toUpperCase();
+    String imageUrl = workshopDetail?.image_url;
+    if (imageUrl?.isEmpty == true) imageUrl = null;
+
+    Future<void> _shareWithImage(Uri uri) async {
+      var request = await HttpClient().getUrl(Uri.parse(imageUrl));
+      var response = await request.close();
+      Uint8List bytes = await consolidateHttpClientResponseBytes(response);
+
+      Share.file('${workshopDetail.title}', '${workshopDetail.id}.png', bytes,
+          'image/png',
+          text:
+              'Checkout this amazing workshop ${workshopDetail.title} to be held on ${workshopDetail.date} at ${workshopDetail.time}. To know more, follow this link: ${uri.toString()}');
+    }
+
+    Future<Uri> _createDynamicLink(int id, bool isPast) async {
+      final DynamicLinkParameters parameters = DynamicLinkParameters(
+        uriPrefix: 'https://litehai.page.link',
+        link: Uri.parse('https://litehai.page.link.com/?id=$id&isPast=$isPast'),
+        androidParameters: AndroidParameters(
+          packageName: 'com.iitbhu.litehai',
+        ),
+      );
+
+      Uri url;
+      final ShortDynamicLink shortLink = await parameters.buildShortLink();
+      url = shortLink.shortUrl;
+
+      return url;
+    }
 
     return Container(
       color: ColorConstants.workshopContainerBackground,
@@ -348,6 +380,33 @@ class WorkshopDetailCustomWidgets {
                           workshopSummary.is_workshop ? 'Workshop' : 'Event',
                           style: Style.titleTextStyle,
                         ),
+                      ),
+                    ),
+                    SizedBox(width: 18.0),
+                    Container(
+                      child: FutureBuilder<Uri>(
+                        future: _createDynamicLink(workshopDetail.id, isPast),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            Uri uri = snapshot.data;
+                            return IconButton(
+                                color: ColorConstants.textColor,
+                                icon: Icon(Icons.share),
+                                iconSize: 30.0,
+                                onPressed: () {
+                                  if (imageUrl != null && imageUrl != '') {
+                                    _shareWithImage(uri);
+                                  } else {
+                                    Share.text(
+                                        'Checkout this amazing workshop ${workshopDetail.title} to be held on ${workshopDetail.date} at ${workshopDetail.time}',
+                                        'To know more, follow this link: ${uri.toString()}',
+                                        'text/plain');
+                                  }
+                                });
+                          } else {
+                            return Container();
+                          }
+                        },
                       ),
                     ),
                   ],
