@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iit_app/model/appConstants.dart';
 import 'package:iit_app/pages/Home/homePage.dart';
+import 'package:iit_app/pages/club_entity/clubPage.dart';
+import 'package:iit_app/pages/club_entity/entityPage.dart';
 import 'package:iit_app/pages/login/loginPage.dart';
 import 'package:iit_app/services/pushNotification.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -44,20 +46,37 @@ class _RootPageState extends State<RootPage> {
   Future<void> _handleDeepLink(PendingDynamicLinkData data) async {
     final Uri deepLink = data?.link;
     if (deepLink != null) {
-      int workshopId = int.tryParse(deepLink.queryParameters['id']);
-      bool isPast = deepLink.queryParameters['isPast'] == 'true';
+      int id = int.tryParse(deepLink.queryParameters['id']);
+      if (deepLink.queryParameters['isPast'] != null) {
+        bool isPast = deepLink.queryParameters['isPast'] == 'true';
 
-      await Navigator.of(context).push(
-        PageRouteBuilder(
-          pageBuilder: (_, __, ___) => WorkshopDetailPage(
-            workshopId,
-            workshop: null,
-            isPast: isPast,
+        await Navigator.of(context).push(
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => WorkshopDetailPage(
+              id,
+              workshop: null,
+              isPast: isPast,
+            ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) =>
+                    FadeTransition(opacity: animation, child: child),
           ),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-              FadeTransition(opacity: animation, child: child),
-        ),
-      );
+        );
+      } else {
+        deepLink.queryParameters['isClub'] == 'true'
+            ? Navigator.of(context).push(PageRouteBuilder(
+                pageBuilder: (_, __, ___) => ClubPage(clubId: id),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) =>
+                        FadeTransition(opacity: animation, child: child),
+              ))
+            : Navigator.of(context).push(PageRouteBuilder(
+                pageBuilder: (_, __, ___) => EntityPage(entityId: id),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) =>
+                        FadeTransition(opacity: animation, child: child),
+              ));
+      }
     }
   }
 

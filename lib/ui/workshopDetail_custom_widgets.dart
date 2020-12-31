@@ -8,6 +8,7 @@ import 'package:iit_app/model/built_post.dart';
 import 'package:iit_app/model/colorConstants.dart';
 import 'package:iit_app/screens/create.dart';
 import 'package:iit_app/screens/resource_create.dart';
+import 'package:iit_app/services/dynamicLink.dart';
 import 'package:iit_app/ui/club_council_entity_common/club_council_entity_widgets.dart';
 import 'package:iit_app/ui/dialogBoxes.dart';
 import 'package:iit_app/ui/separator.dart';
@@ -18,7 +19,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:clippy_flutter/clippy_flutter.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 class WorkshopDetailCustomWidgets {
   final BuiltWorkshopDetailPost workshopDetail;
@@ -312,8 +312,16 @@ class WorkshopDetailCustomWidgets {
     String imageUrl = workshopDetail?.image_url;
     if (imageUrl?.isEmpty == true) imageUrl = null;
 
+    final isClub = workshopSummary.club != null;
+
+    String logoImageUrl = isClub
+        ? workshopSummary.club.small_image_url
+        : workshopSummary.entity.small_image_url;
+
     Future<void> _shareWithImage(Uri uri) async {
-      var request = await HttpClient().getUrl(Uri.parse(imageUrl));
+      var request = (imageUrl != null && imageUrl != '')
+          ? await HttpClient().getUrl(Uri.parse(imageUrl))
+          : await HttpClient().getUrl(Uri.parse(logoImageUrl));
       var response = await request.close();
       Uint8List bytes = await consolidateHttpClientResponseBytes(response);
 
@@ -321,22 +329,6 @@ class WorkshopDetailCustomWidgets {
           'image/png',
           text:
               'Checkout this amazing workshop ${workshopDetail.title} to be held on ${workshopDetail.date} at ${workshopDetail.time}. To know more, follow this link: ${uri.toString()}');
-    }
-
-    Future<Uri> _createDynamicLink(int id, bool isPast) async {
-      final DynamicLinkParameters parameters = DynamicLinkParameters(
-        uriPrefix: 'https://litehai.page.link',
-        link: Uri.parse('https://litehai.page.link.com/?id=$id&isPast=$isPast'),
-        androidParameters: AndroidParameters(
-          packageName: 'com.iitbhu.litehai',
-        ),
-      );
-
-      Uri url;
-      final ShortDynamicLink shortLink = await parameters.buildShortLink();
-      url = shortLink.shortUrl;
-
-      return url;
     }
 
     return Container(
@@ -383,32 +375,28 @@ class WorkshopDetailCustomWidgets {
                       ),
                     ),
                     SizedBox(width: 18.0),
-                    Container(
-                      child: FutureBuilder<Uri>(
-                        future: _createDynamicLink(workshopDetail.id, isPast),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            Uri uri = snapshot.data;
-                            return IconButton(
-                                color: ColorConstants.textColor,
-                                icon: Icon(Icons.share),
-                                iconSize: 30.0,
-                                onPressed: () {
-                                  if (imageUrl != null && imageUrl != '') {
-                                    _shareWithImage(uri);
-                                  } else {
-                                    Share.text(
-                                        'Checkout this amazing workshop ${workshopDetail.title} to be held on ${workshopDetail.date} at ${workshopDetail.time}',
-                                        'To know more, follow this link: ${uri.toString()}',
-                                        'text/plain');
-                                  }
-                                });
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
-                    ),
+                    workshopDetail == null
+                        ? Container()
+                        : Container(
+                            child: FutureBuilder<Uri>(
+                              future: DynamicLinkService.createDynamicLink(
+                                  id: workshopDetail.id, isPast: isPast),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  Uri uri = snapshot.data;
+                                  return IconButton(
+                                      color: ColorConstants.textColor,
+                                      icon: Icon(Icons.share),
+                                      iconSize: 30.0,
+                                      onPressed: () {
+                                        _shareWithImage(uri);
+                                      });
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
+                          ),
                   ],
                 ),
                 Separator(),
