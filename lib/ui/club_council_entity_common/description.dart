@@ -151,14 +151,26 @@ class _DescriptionState extends State<Description> {
   }
 
   Future<void> _shareWithImage(Uri uri) async {
-    var request =
-        await HttpClient().getUrl(Uri.parse(widget.map.small_image_url));
+    try {
+      var request =
+          await HttpClient().getUrl(Uri.parse(widget.map.small_image_url));
 
-    var response = await request.close();
-    Uint8List bytes = await consolidateHttpClientResponseBytes(response);
-    Share.file('${widget.map.name}', '${widget.map.id}.png', bytes, 'image/png',
-        text:
-            'Do Subscribe ${widget.map.name} to stay updated about upcoming workshops and events: ${uri.toString()}');
+      var response = await request.close();
+      var bytes = await consolidateHttpClientResponseBytes(response);
+      await Share.file(
+          '${widget.map.name}', '${widget.map.id}.png', bytes, 'image/png',
+          text:
+              'Do Subscribe ${widget.map.name} to stay updated about upcoming workshops and events: ${uri.toString()}');
+    } catch (err) {
+      _shareWithoutImage(uri);
+    }
+  }
+
+  Future<void> _shareWithoutImage(Uri uri) async {
+    Share.text(
+        '${widget.map.name}',
+        'Do Subscribe ${widget.map.name} to stay updated about upcoming workshops and events: ${uri.toString()}',
+        'text/plain');
   }
 
   Widget build(context) {
@@ -253,7 +265,9 @@ class _DescriptionState extends State<Description> {
                                       icon: Icon(Icons.share),
                                       iconSize: 30.0,
                                       onPressed: () {
-                                        _shareWithImage(uri);
+                                        widget.map.small_image_url != null
+                                            ? _shareWithImage(uri)
+                                            : _shareWithoutImage(uri);
                                       });
                                 } else {
                                   return Container();

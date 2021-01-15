@@ -318,17 +318,28 @@ class WorkshopDetailCustomWidgets {
         ? workshopSummary.club.small_image_url
         : workshopSummary.entity.small_image_url;
 
-    Future<void> _shareWithImage(Uri uri) async {
-      var request = (imageUrl != null && imageUrl != '')
-          ? await HttpClient().getUrl(Uri.parse(imageUrl))
-          : await HttpClient().getUrl(Uri.parse(logoImageUrl));
-      var response = await request.close();
-      Uint8List bytes = await consolidateHttpClientResponseBytes(response);
+    Future<void> _shareWithoutImage(Uri uri) async {
+      Share.text(
+          '${workshopDetail.title}',
+          'Checkout this amazing workshop ${workshopDetail.title} to be held on ${workshopDetail.date} at ${workshopDetail.time}. To know more, follow this link: ${uri.toString()}',
+          'text/plain');
+    }
 
-      Share.file('${workshopDetail.title}', '${workshopDetail.id}.png', bytes,
-          'image/png',
-          text:
-              'Checkout this amazing workshop ${workshopDetail.title} to be held on ${workshopDetail.date} at ${workshopDetail.time}. To know more, follow this link: ${uri.toString()}');
+    Future<void> _shareWithImage(Uri uri) async {
+      try {
+        var request = (imageUrl != null && imageUrl != '')
+            ? await HttpClient().getUrl(Uri.parse(imageUrl))
+            : await HttpClient().getUrl(Uri.parse(logoImageUrl));
+        var response = await request.close();
+        Uint8List bytes = await consolidateHttpClientResponseBytes(response);
+
+        await Share.file('${workshopDetail.title}', '${workshopDetail.id}.png',
+            bytes, 'image/png',
+            text:
+                'Checkout this amazing workshop ${workshopDetail.title} to be held on ${workshopDetail.date} at ${workshopDetail.time}. To know more, follow this link: ${uri.toString()}');
+      } catch (err) {
+        _shareWithoutImage(uri);
+      }
     }
 
     return Container(
