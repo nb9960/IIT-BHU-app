@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:iit_app/model/appConstants.dart';
 import 'package:iit_app/model/built_post.dart';
 import 'package:iit_app/model/colorConstants.dart';
@@ -371,13 +372,13 @@ class WorkshopDetailCustomWidgets {
                 Row(
                   children: [
                     Text(_overviewTitle, style: Style.headerTextStyle),
-                    SizedBox(width: 18.0),
+                    SizedBox(width: 8.0),
                     Label(
                       triangleHeight: 10.0,
                       edge: Edge.RIGHT,
                       child: Container(
                         padding: const EdgeInsets.only(
-                            left: 8.0, right: 18.0, top: 8.0, bottom: 8.0),
+                            left: 8.0, right: 7.0, top: 8.0, bottom: 8.0),
                         color: ColorConstants.workshopCardContainer,
                         child: Text(
                           workshopSummary.is_workshop ? 'Workshop' : 'Event',
@@ -385,7 +386,6 @@ class WorkshopDetailCustomWidgets {
                         ),
                       ),
                     ),
-                    SizedBox(width: 18.0),
                     workshopDetail == null
                         ? Container()
                         : Container(
@@ -401,6 +401,37 @@ class WorkshopDetailCustomWidgets {
                                       iconSize: 30.0,
                                       onPressed: () {
                                         _shareWithImage(uri);
+                                      });
+                                } else {
+                                  return Container();
+                                }
+                              },
+                            ),
+                          ),
+                    workshopDetail == null
+                        ? Container()
+                        : Container(
+                            child: FutureBuilder<Uri>(
+                              future: DynamicLinkService.createDynamicLink(
+                                  id: workshopDetail.id, isPast: isPast),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  Uri uri = snapshot.data;
+                                  return IconButton(
+                                      color: ColorConstants.textColor,
+                                      icon: Icon(Icons.copy_outlined),
+                                      iconSize: 30.0,
+                                      onPressed: () {
+                                        Clipboard.setData(new ClipboardData(
+                                                text: uri.toString()))
+                                            .then((_) {
+                                          Scaffold.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text(
+                                                "URL copied to clipboard!"),
+                                            duration: Duration(seconds: 3),
+                                          ));
+                                        });
                                       });
                                 } else {
                                   return Container();
