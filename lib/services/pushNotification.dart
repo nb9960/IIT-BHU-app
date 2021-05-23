@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:iit_app/model/appConstants.dart';
+import 'package:iit_app/model/deprecatedWidgetsStyle.dart';
 import 'package:iit_app/pages/login/loginPage.dart';
 import 'package:iit_app/pages/worshop_detail/workshopDetailPage.dart';
 
@@ -44,7 +45,8 @@ class PushNotification {
           title: Text("${message.notification.title}"),
           content: Text("${message.notification.body}"),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
+                style: flatButtonStyle,
                 child: Text("Click here to view the details"),
                 onPressed: () {
                   Navigator.pop(context, true);

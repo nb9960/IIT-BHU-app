@@ -9,6 +9,7 @@ import 'package:iit_app/external_libraries/spin_kit.dart';
 import 'package:iit_app/model/appConstants.dart';
 import 'package:iit_app/model/built_post.dart';
 import 'package:iit_app/model/colorConstants.dart';
+import 'package:iit_app/model/deprecatedWidgetsStyle.dart';
 import 'package:iit_app/services/dynamicLink.dart';
 import 'package:iit_app/ui/dialogBoxes.dart';
 import 'package:iit_app/ui/separator.dart';
@@ -45,7 +46,8 @@ class _DescriptionState extends State<Description> {
           title: Text("Unsuccessful :("),
           content: Text("Please try again."),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
+              style: flatButtonStyle,
               child: Text("Ok."),
               onPressed: () {
                 Navigator.pop(context);
@@ -67,7 +69,8 @@ class _DescriptionState extends State<Description> {
           title: Text("Successful!"),
           content: Text("Description edited succesfully!"),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
+              style: flatButtonStyle,
               child: Text("Ok."),
               onPressed: () {
                 Navigator.pop(context);

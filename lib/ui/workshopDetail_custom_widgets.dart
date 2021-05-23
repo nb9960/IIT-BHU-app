@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:iit_app/model/appConstants.dart';
 import 'package:iit_app/model/built_post.dart';
 import 'package:iit_app/model/colorConstants.dart';
+import 'package:iit_app/model/deprecatedWidgetsStyle.dart';
 import 'package:iit_app/screens/create.dart';
 import 'package:iit_app/screens/resource_create.dart';
 import 'package:iit_app/services/dynamicLink.dart';
@@ -27,7 +28,7 @@ class WorkshopDetailCustomWidgets {
   final BuildContext context;
   final bool isPast;
   final int is_interested;
-  final GlobalKey<ScaffoldState> scaffoldKey;
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
   final Function() updateButton;
   final Function() reload;
   final Function() deleteWorkshop;
@@ -39,7 +40,7 @@ class WorkshopDetailCustomWidgets {
     @required this.context,
     @required this.isPast,
     @required this.is_interested,
-    @required this.scaffoldKey,
+    @required this.scaffoldMessengerKey,
     @required this.updateButton,
     @required this.reload,
     @required this.deleteWorkshop,
@@ -165,7 +166,8 @@ class WorkshopDetailCustomWidgets {
           (workshopDetail != null && workshopDetail.is_por_holder != null)
               ? (workshopDetail.is_por_holder ||
                       workshopDetail.is_workshop_contact)
-                  ? RaisedButton(
+                  ? ElevatedButton(
+                      style: raisedButtonStyle,
                       child: Text("Add resources"),
                       onPressed: () => {
                         Navigator.push(
@@ -427,7 +429,7 @@ class WorkshopDetailCustomWidgets {
                                           Clipboard.setData(new ClipboardData(
                                                   text: uri.toString()))
                                               .then((_) {
-                                            Scaffold.of(context)
+                                            ScaffoldMessenger.of(context)
                                                 .showSnackBar(SnackBar(
                                               content: Text(
                                                   "URL copied to clipboard!"),
@@ -563,7 +565,7 @@ class WorkshopDetailCustomWidgets {
                             : InkWell(
                                 onTap: () async {
                                   if (AppConstants.isGuest) {
-                                    scaffoldKey.currentState
+                                    scaffoldMessengerKey.currentState
                                         .showSnackBar(SnackBar(
                                       content: Text('Please Log In first'),
                                       duration: Duration(seconds: 2),
@@ -620,7 +622,8 @@ class WorkshopDetailCustomWidgets {
   }
 
   Row _getLocationOnMaps() {
-    final mapButton = RaisedButton(
+    final mapButton = ElevatedButton(
+      style: raisedButtonStyle,
       child: Row(
         children: [Icon(Icons.map), Text("see map")],
       ),

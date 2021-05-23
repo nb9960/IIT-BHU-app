@@ -122,7 +122,8 @@ class SideBar extends Drawer {
 
                     onTap: () {
                       Navigator.pop(context);
-                      return Scaffold.of(context).showSnackBar(SnackBar(
+                      return ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(
                         elevation: 10,
                         content: Text('You must be logged in'),
                         duration: Duration(seconds: 2),

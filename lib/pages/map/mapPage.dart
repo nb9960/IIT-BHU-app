@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iit_app/model/colorConstants.dart';
+import 'package:iit_app/model/deprecatedWidgetsStyle.dart';
 import 'package:iit_app/ui/drawer.dart';
 
 // TODO: in androidManifest.xml , api key has to be changed  (register on goole cloud platform from original gmail and generate api key and enable required services)
@@ -275,14 +276,16 @@ class _MyAppState extends State<TheMap> {
             title: Text(title ?? '(No Title)'),
             content: Text(innerText ?? '(No Inner Text)'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
+                style: flatButtonStyle,
                 child: Text("No."),
                 onPressed: () {
                   Navigator.of(context).pop(false);
                   return false;
                 },
               ),
-              FlatButton(
+              TextButton(
+                style: flatButtonStyle,
                 child: Text("Yes!"),
                 onPressed: () {
                   Navigator.of(context).pop(true);

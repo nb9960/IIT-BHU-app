@@ -4,6 +4,7 @@ import 'package:iit_app/data/internet_connection_interceptor.dart';
 import 'package:iit_app/model/built_post.dart';
 import 'package:iit_app/model/appConstants.dart';
 import 'package:iit_app/model/colorConstants.dart';
+import 'package:iit_app/model/deprecatedWidgetsStyle.dart';
 import 'package:iit_app/model/workshopCreator.dart';
 import 'package:iit_app/ui/club_council_entity_common/club_council_entity_widgets.dart';
 import 'package:iit_app/ui/dialogBoxes.dart';
@@ -23,7 +24,8 @@ class WorkshopDetailPage extends StatefulWidget {
 }
 
 class _WorkshopDetailPage extends State<WorkshopDetailPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      new GlobalKey<ScaffoldMessengerState>();
   final PanelController _panelController = PanelController();
   BuiltWorkshopSummaryPost workshopSummary;
 
@@ -58,7 +60,8 @@ class _WorkshopDetailPage extends State<WorkshopDetailPage> {
           title: Text("Unsuccessful :("),
           content: Text("Please try again."),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
+              style: flatButtonStyle,
               child: Text("Ok."),
               onPressed: () {
                 Navigator.pop(context);
@@ -79,11 +82,13 @@ class _WorkshopDetailPage extends State<WorkshopDetailPage> {
           title: Text("Delete resource"),
           content: Text("Are you sure to remove this resource?"),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
+              style: flatButtonStyle,
               child: Text("No. Take Me Back."),
               onPressed: () => Navigator.of(context).pop(false),
             ),
-            FlatButton(
+            TextButton(
+              style: flatButtonStyle,
               child: Text("Yup!"),
               onPressed: () => Navigator.of(context).pop(true),
             ),
@@ -186,7 +191,8 @@ class _WorkshopDetailPage extends State<WorkshopDetailPage> {
             return AlertDialog(
                 content: Text("Resource deleted"),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
+                    style: flatButtonStyle,
                     child: Text("yay"),
                     onPressed: () => Navigator.pop(context),
                   )
@@ -251,7 +257,7 @@ class _WorkshopDetailPage extends State<WorkshopDetailPage> {
         context: context,
         isPast: widget.isPast,
         is_interested: is_interested,
-        scaffoldKey: _scaffoldKey,
+        scaffoldMessengerKey: _scaffoldMessengerKey,
         updateButton: updateButton,
         reload: _reload,
         deleteWorkshop: deleteWorkshop,
@@ -266,7 +272,7 @@ class _WorkshopDetailPage extends State<WorkshopDetailPage> {
                 child: RefreshIndicator(
                   onRefresh: () async => _reload(),
                   child: Scaffold(
-                    key: _scaffoldKey,
+                    key: _scaffoldMessengerKey,
                     backgroundColor: ColorConstants.backgroundThemeColor,
                     body: SlidingUpPanel(
                       controller: _panelController,

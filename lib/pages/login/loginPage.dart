@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iit_app/external_libraries/spin_kit.dart';
 import 'package:iit_app/model/appConstants.dart';
+import 'package:iit_app/model/deprecatedWidgetsStyle.dart';
 import 'package:iit_app/model/sharedPreferenceKeys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -75,15 +76,44 @@ class _LoginPageState extends State<LoginPage> {
                             fontSize: 40.0, fontWeight: FontWeight.bold)),
                   ),
                   SizedBox(height: 15),
-                  OutlineButton(
-                    splashColor: Colors.grey,
+                  OutlinedButton(
+                    style: outlineButtonStyle.copyWith(
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(40)),
+                      ),
+                      side: MaterialStateProperty.resolveWith<BorderSide>(
+                          (states) {
+                        if (states.contains(MaterialState.pressed))
+                          return BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 1,
+                          );
+                        return BorderSide(color: Colors.grey);
+                      }),
+                      elevation:
+                          MaterialStateProperty.resolveWith<double>((states) {
+                        if (states.contains(MaterialState.pressed)) return 0.0;
+                        return null;
+                      }),
+                      overlayColor: MaterialStateProperty.resolveWith(
+                        (states) {
+                          if (states.contains(MaterialState.pressed))
+                            return Colors.grey;
+                          return null;
+                        },
+                      ),
+                      foregroundColor: MaterialStateProperty.resolveWith<Color>(
+                        (states) {
+                          if (states.contains(MaterialState.pressed))
+                            return Colors.grey[400];
+                          return Colors.grey;
+                        },
+                      ),
+                    ),
                     onPressed: AppConstants.logInButtonEnabled == false
                         ? null
                         : () => _signInWithGoogle(),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40)),
-                    highlightElevation: 0,
-                    borderSide: BorderSide(color: Colors.grey),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                       child: Row(
@@ -97,8 +127,9 @@ class _LoginPageState extends State<LoginPage> {
                             padding: const EdgeInsets.only(left: 10),
                             child: Text(
                               'Sign in with Google',
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.grey),
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
                             ),
                           )
                         ],

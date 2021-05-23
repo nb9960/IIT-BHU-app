@@ -3,6 +3,7 @@ import 'package:iit_app/data/internet_connection_interceptor.dart';
 import 'package:iit_app/external_libraries/fab_circular_menu.dart';
 import 'package:iit_app/model/appConstants.dart';
 import 'package:iit_app/model/colorConstants.dart';
+import 'package:iit_app/model/deprecatedWidgetsStyle.dart';
 import 'package:iit_app/screens/homeScreen.dart';
 import 'package:iit_app/screens/home_app_bar.dart';
 import 'package:iit_app/screens/home_FAB.dart';
@@ -85,11 +86,13 @@ class _HomePageState extends State<HomePage>
                   borderRadius: BorderRadius.circular(10.0)),
               title: Text('Do you really want to exit?'),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
+                  style: flatButtonStyle,
                   child: Text('No!'),
                   onPressed: () => Navigator.pop(context, false),
                 ),
-                FlatButton(
+                TextButton(
+                  style: flatButtonStyle,
                   child: Text('Yes.'),
                   onPressed: () => SystemChannels.platform
                       .invokeMethod('SystemNavigator.pop'),

@@ -27,7 +27,8 @@ class _ClubPageState extends State<ClubPage>
   BuiltAllWorkshopsPost clubWorkshops;
   bool _toggling = false;
   TabController _tabController;
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      new GlobalKey<ScaffoldMessengerState>();
 
   File _clubLargeLogoFile;
 
@@ -190,7 +191,7 @@ class _ClubPageState extends State<ClubPage>
       child: WillPopScope(
         onWillPop: _willPopCallback,
         child: Scaffold(
-          key: _scaffoldKey,
+          key: _scaffoldMessengerKey,
           resizeToAvoidBottomInset: false,
           backgroundColor: ColorConstants.backgroundThemeColor,
           // floatingActionButton: AppConstants.isGuest
@@ -233,7 +234,7 @@ class _ClubPageState extends State<ClubPage>
                 update: _update,
                 toggler: _toggleToggle,
                 toggling: _toggling,
-                scaffoldKey: _scaffoldKey,
+                scaffoldMessengerKey: _scaffoldMessengerKey,
               ),
               parallaxEnabled: true,
               controller: _pc,

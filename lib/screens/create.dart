@@ -9,6 +9,7 @@ import 'dart:async';
 import 'package:iit_app/model/built_post.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:iit_app/model/colorConstants.dart';
+import 'package:iit_app/model/deprecatedWidgetsStyle.dart';
 import 'package:iit_app/model/workshopCreator.dart';
 import 'package:iit_app/ui/dialogBoxes.dart';
 import 'package:image_picker/image_picker.dart';
@@ -153,7 +154,8 @@ class _CreateEditScreenState extends State<CreateEditScreen> {
             title: Text(title ?? '(No Title)'),
             content: Text(innerText ?? '(No Inner Text)'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
+                style: flatButtonStyle,
                 child: Text('Ok.'),
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -193,10 +195,14 @@ class _CreateEditScreenState extends State<CreateEditScreen> {
                         ),
                       ),
                     ),
-                    RaisedButton(
+                    ElevatedButton(
                       child: Text('+ Create'),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
+                      style: raisedButtonStyle.copyWith(
+                        shape: MaterialStateProperty.all<OutlinedBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
                       ),
                       onPressed: () async {
                         final tagForm = _tagFormKey.currentState;
@@ -254,7 +260,8 @@ class _CreateEditScreenState extends State<CreateEditScreen> {
                 ),
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
+                  style: flatButtonStyle,
                   child: Text('Ok.'),
                   onPressed: () {
                     this._tagCreateController.text = '';
@@ -278,13 +285,15 @@ class _CreateEditScreenState extends State<CreateEditScreen> {
               content: Text(
                   '''Are you sure you want to delete this tag for this club?\nNote that this option is NOT to be used to remove the tag for the ${widget.isWorkshopOrEvent}.\nThis is to permanently delete this tag for ${_isEntity ? widget.entity.name : widget.club.name}.'''),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
+                  style: flatButtonStyle,
                   child: Text('No.'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
-                FlatButton(
+                TextButton(
+                  style: flatButtonStyle,
                   child: Text('Yes.'),
                   onPressed: () async {
                     final deleteTag = TagDelete((b) => b..tag_name = tagName);
@@ -465,12 +474,14 @@ class _CreateEditScreenState extends State<CreateEditScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text("Date:"),
-                        RaisedButton(
+                        ElevatedButton(
+                          style: raisedButtonStyle,
                           onPressed: () => _selectDate(context),
                           child: Text('${_workshop.date}'),
                         ),
                         Text("Time:"),
-                        RaisedButton(
+                        ElevatedButton(
+                          style: raisedButtonStyle,
                           onPressed: () => _selectTime(context),
                           child: Text('${_workshop.time}'),
                         ),
@@ -505,7 +516,8 @@ class _CreateEditScreenState extends State<CreateEditScreen> {
                                   setState(() {});
                                 })
                             : Container(),
-                        RaisedButton(
+                        ElevatedButton(
+                          style: raisedButtonStyle,
                           child: Icon(Icons.map),
                           onPressed: () async {
                             final location = await Navigator.of(context)
@@ -604,9 +616,15 @@ class _CreateEditScreenState extends State<CreateEditScreen> {
                             ),
                           ),
                           this._isSearchingContacts
-                              ? RaisedButton(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50)),
+                              ? ElevatedButton(
+                                  style: raisedButtonStyle.copyWith(
+                                    shape: MaterialStateProperty.all<
+                                        OutlinedBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                    ),
+                                  ),
                                   onPressed: () {
                                     this._searchContactsController.text = '';
                                     this._isSearchingContacts = false;
@@ -747,22 +765,31 @@ class _CreateEditScreenState extends State<CreateEditScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: RaisedButton(
-                          child: Text('+ Create'),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
+                        child: ElevatedButton(
+                          style: raisedButtonStyle.copyWith(
+                            shape: MaterialStateProperty.all<OutlinedBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                            ),
                           ),
+                          child: Text('+ Create'),
                           onPressed: () async {
                             await tagCreateDialog();
                           },
                         ),
                       ),
                       this._isSearchingTags || this._allTagDataShow
-                          ? RaisedButton(
-                              child: Text('X Clear'),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
+                          ? ElevatedButton(
+                              style: raisedButtonStyle.copyWith(
+                                shape:
+                                    MaterialStateProperty.all<OutlinedBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                ),
                               ),
+                              child: Text('X Clear'),
                               onPressed: () {
                                 FocusScope.of(context).unfocus();
                                 this._tagSearchController.text = '';
@@ -774,11 +801,16 @@ class _CreateEditScreenState extends State<CreateEditScreen> {
                                 setState(() {});
                               },
                             )
-                          : RaisedButton(
-                              child: Text('All Tags'),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
+                          : ElevatedButton(
+                              style: raisedButtonStyle.copyWith(
+                                shape:
+                                    MaterialStateProperty.all<OutlinedBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                ),
                               ),
+                              child: Text('All Tags'),
                               onPressed: () async {
                                 FocusScope.of(context).unfocus();
                                 if (!_isEntity) {
@@ -909,8 +941,11 @@ class _CreateEditScreenState extends State<CreateEditScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(
                           vertical: 16.0, horizontal: 64.0),
-                      child: RaisedButton(
-                        color: ColorConstants.homeBackground,
+                      child: ElevatedButton(
+                        style: raisedButtonStyle.copyWith(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              ColorConstants.homeBackground),
+                        ),
                         onPressed: () async {
                           final form = _formKey.currentState;
                           if (form.validate()) {
@@ -929,7 +964,7 @@ class _CreateEditScreenState extends State<CreateEditScreen> {
                             if (isconfirmed == false || isconfirmed == null)
                               return;
 
-                            Scaffold.of(context).showSnackBar(
+                            ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: widget.workshopData == null
                                     ? Text('Creating ...')
@@ -1046,7 +1081,21 @@ class _CreateEditScreenState extends State<CreateEditScreen> {
                                   ),
                                   Expanded(
                                     flex: 2,
-                                    child: OutlineButton(
+                                    child: OutlinedButton(
+                                      style: outlineButtonStyle.copyWith(
+                                        side: MaterialStateProperty.resolveWith<
+                                            BorderSide>((states) {
+                                          if (states
+                                              .contains(MaterialState.pressed))
+                                            return BorderSide(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                              width: 1,
+                                            );
+                                          return null;
+                                        }),
+                                      ),
                                       onPressed: () {
                                         int _id =
                                             _searchedProfileresult[index].id;

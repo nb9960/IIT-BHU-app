@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iit_app/external_libraries/spin_kit.dart';
 import 'package:iit_app/model/appConstants.dart';
 import 'package:iit_app/model/colorConstants.dart';
+import 'package:iit_app/model/deprecatedWidgetsStyle.dart';
 import 'package:iit_app/ui/drawer.dart';
 import 'package:iit_app/pages/Home/homePage.dart';
 import 'package:iit_app/ui/text_style.dart';
@@ -50,7 +51,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
-                    child: RaisedButton(
+                    child: ElevatedButton(
+                      style: raisedButtonStyle,
                       onPressed: () async {
                         ColorConstants.setDark();
                         SharedPreferences prefs =
@@ -67,7 +69,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     width: 10,
                   ),
                   Container(
-                    child: RaisedButton(
+                    child: ElevatedButton(
+                      style: raisedButtonStyle,
                       onPressed: () async {
                         ColorConstants.setLight();
                         SharedPreferences prefs =
@@ -115,15 +118,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Center(
                 child: this._refreshing
                     ? LoadingCircle
-                    : RaisedButton(
+                    : ElevatedButton(
+                        style: raisedButtonStyle,
                         onPressed: onResetDatabase,
                         child: Text("Reset Saved Data")),
               ),
             ),
             Container(
               margin: EdgeInsets.all(20),
-              child: RaisedButton(
-                  onPressed: () => _chooseTheme(), child: Text('Pick Theme')),
+              child: ElevatedButton(
+                style: raisedButtonStyle,
+                onPressed: () => _chooseTheme(),
+                child: Text('Pick Theme'),
+              ),
             ),
           ],
         ),

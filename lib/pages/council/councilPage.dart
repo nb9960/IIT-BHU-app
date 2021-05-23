@@ -19,7 +19,8 @@ class _CouncilPageState extends State<CouncilPage> {
   BuiltCouncilPost councilData;
   File _councilLargeLogoFile;
   bool _toggling = false;
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      new GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -90,7 +91,7 @@ class _CouncilPageState extends State<CouncilPage> {
         child: WillPopScope(
           onWillPop: _willPopCallback,
           child: Scaffold(
-            key: _scaffoldKey,
+            key: _scaffoldMessengerKey,
             resizeToAvoidBottomInset: false,
             backgroundColor: ColorConstants.backgroundThemeColor,
             body: RefreshIndicator(
@@ -105,7 +106,7 @@ class _CouncilPageState extends State<CouncilPage> {
                   update: _update,
                   toggler: _toggleToggle,
                   toggling: _toggling,
-                  scaffoldKey: _scaffoldKey,
+                  scaffoldMessengerKey: _scaffoldMessengerKey,
                 ),
                 controller: _pc,
                 borderRadius: radius,

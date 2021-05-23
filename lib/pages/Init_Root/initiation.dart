@@ -7,6 +7,7 @@ import 'package:iit_app/data/post_api_service.dart';
 import 'package:iit_app/external_libraries/spin_kit.dart';
 import 'package:iit_app/model/appConstants.dart';
 import 'package:iit_app/model/colorConstants.dart';
+import 'package:iit_app/model/deprecatedWidgetsStyle.dart';
 import 'package:iit_app/model/sharedPreferenceKeys.dart';
 import 'package:iit_app/services/connectivityCheck.dart';
 import 'package:iit_app/services/crud.dart';
@@ -158,7 +159,8 @@ class _InitiationState extends State<Initiation> {
                   ],
                 ),
                 actions: [
-                  RaisedButton(
+                  ElevatedButton(
+                    style: raisedButtonStyle,
                     onPressed: () {
                       try {
                         final appLink =
@@ -170,7 +172,7 @@ class _InitiationState extends State<Initiation> {
                       }
                     },
                     child: Text('Update'),
-                  )
+                  ),
                 ],
               ),
             ));

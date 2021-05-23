@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iit_app/data/internet_connection_interceptor.dart';
 import 'package:iit_app/model/appConstants.dart';
 import 'package:iit_app/model/built_post.dart';
+import 'package:iit_app/model/deprecatedWidgetsStyle.dart';
 import 'package:iit_app/screens/accountScreen.dart';
 
 class AccountPage extends StatefulWidget {
@@ -53,7 +54,8 @@ class _AccountPageState extends State<AccountPage> {
             ],
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
+              style: flatButtonStyle,
               child: Text('Ok'),
               onPressed: () {
                 Navigator.of(context).pop(controller.text);
@@ -73,7 +75,8 @@ class _AccountPageState extends State<AccountPage> {
           title: new Text("Unsuccessful :("),
           content: new Text(title),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
+              style: flatButtonStyle,
               child: new Text("Ok."),
               onPressed: () {
                 Navigator.pop(context);
